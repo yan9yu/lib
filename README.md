@@ -25,7 +25,8 @@ print comlib.util.test()
 ```
 
 ###Update
+``` shell
 git pull
-
+```
 
 
