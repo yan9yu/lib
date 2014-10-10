@@ -63,6 +63,7 @@ class simhash:
         while x:
             tot += 1
             x &= x - 1
+
         return tot
 
     # 求相似度
