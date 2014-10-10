@@ -30,6 +30,7 @@ if __name__ == "__main__":
 
     # date.py
     print date.getDateList("20140101", "20140110")
+    print date.getAfterXDay(3, start="20140101")
 
     # decorator.py
 
