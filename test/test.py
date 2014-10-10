@@ -6,6 +6,7 @@ sys.path.append("../")
 
 from comlib import algo
 from comlib import date
+from comlib import util
 
 
 if __name__ == "__main__":
@@ -55,3 +56,6 @@ if __name__ == "__main__":
     # sql.py
 
     # thread.py
+
+    # util.py
+    util.import_test()
