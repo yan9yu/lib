@@ -24,6 +24,40 @@ from datetime import timedelta
 from datetime import datetime
 
 
+def getHourList(start, end=None):
+    """
+    Return a hour list between start~end. If end is None, then end will be start+1
+        Input: start = '1', end = '5'
+        Output: ['01','02','03','04']
+    """
+    HOURS = []
+    for ii in xrange(0, 24):
+        if len(str(ii)) == 1:
+            HOURS.append("0" + str(ii))
+        else:
+            HOURS.append(str(ii))
+
+    if start not in xrange(0, 24) or end not in xrange(0, 24):
+        print "[ERROR] date.py: Please input correct parameter for getHourList()!"
+        return -1
+
+    if isinstance(start, int):
+        start = str(start)
+
+    if len(start) == 1:
+        start = "0" + start
+
+    if end == None:
+        end = HOURS[HOURS.index(start) + 1]
+    if isinstance(end, int):
+        end = str(end)
+
+    if len(end) == 1:
+        end = "0" + end
+
+    return HOURS[HOURS.index(start):HOURS.index(end)]
+
+
 def getDateList(start, end=None):
     """
     Return a date list between start~end. If end is None, then end will be start+1

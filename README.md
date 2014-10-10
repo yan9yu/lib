@@ -17,10 +17,9 @@ git clone git://github.com/yan9yu/comlib.git path/to/your/python/code/
 
 ###Usage
 ``` python
+
 import comlib
-
 print comlib.util.test()
-
 ```
 
 ###Update
