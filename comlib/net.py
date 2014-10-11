@@ -31,10 +31,10 @@ def sendEmail(subject, content, mailto=None):
     from email.mime.text import MIMEText
 
     host = "smtp.126.com"
-    user = "programalert"
-    passwd = "aabbcc123"
+    user = "aprogramalert"
+    passwd = "alert123"
     postfix = "126.com"
-    mailList = ["programalert@126.com"]
+    mailList = ["aprogramalert@126.com"]
 
     if mailto is None:
         pass
