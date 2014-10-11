@@ -32,12 +32,15 @@ if __name__ == "__main__":
     # date.py
     print date.getHourList(1, 23)
     print date.getDateList("20140101", "20140110")
+    print date.getBeforeXDay(3, start="20140101")
     print date.getAfterXDay(3, start="20140101")
+
 
     # decorator.py
 
 
     # file.py
+
 
     # hash.py
 
