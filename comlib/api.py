@@ -16,7 +16,10 @@ TODO:
 
 """
 
+import random
+
 import net
+import date
 
 try:
     import simplejson as json
@@ -25,7 +28,6 @@ except Exception, e:
 
 
 class IPLocation():
-
     def __init__(self, ip):
         self.ip = ip
         self.api_format = "json"
@@ -50,7 +52,11 @@ class IPLocation():
             Input: IP address
             Output: geo info based on ip-services
         """
-        for url in [self.freegeoip_url, self.taobao_url, self.qq_url]:
+        urls = [self.freegeoip_url, self.taobao_url, self.qq_url]
+        random.seed(date.getNow())
+        random.shuffle(urls)
+
+        for url in urls:
             respose = net.getHTMLContent(url)
             if respose:
                 resposedict = json.loads(respose, encoding="utf-8")

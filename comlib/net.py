@@ -31,10 +31,10 @@ def sendEmail(subject, content, mailto=None):
     from email.mime.text import MIMEText
 
     host = "smtp.126.com"
-    user = "aprogramalert"
-    passwd = "alert123"
+    user = "programalert"
+    passwd = "aabbcc123"
     postfix = "126.com"
-    mailList = ["aprogramalert@126.com"]
+    mailList = ["programalert@126.com"]
 
     if mailto is None:
         pass
@@ -78,7 +78,6 @@ except:
 
 
 class WebPage():
-
     def __init__(self, url):
         self.url = url
         self.timeout = 100
@@ -87,7 +86,7 @@ class WebPage():
         self.content = ""
         self.soup = None
         self.headers = {'Accept-Encoding': 'identity, deflate, compress, gzip', 'Accept': '*/*', 'User-Agent':
-                        'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
+            'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
 
     def getHTML(self):
         fail = 0
@@ -165,6 +164,8 @@ def getHTMLContent(url):
                         break
                     else:
                         print "[NET] ERROR: Can not get content from %s(%s)" % (url, response.status_code)
+                        time.sleep(3)
+                        failure += 1
                 except (requests.exceptions.Timeout, Exception), e:
                     print "[NET] ERROR: %s" % (e.message)
                     time.sleep(3)
