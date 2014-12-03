@@ -132,14 +132,14 @@ def eptDir(path):
             rm(file)
 
 
-def read(path, type=None, quit=False):
+def read(path, type=None, quiet=False):
     """
     Read muti-types of files
         Input: path, type=["csv", "txt", "dat", "json", "pck"]
         Output: data
     """
     if type == None or type not in ["csv", "txt", "dat", "json", "pck"]:
-        if not quit:
+        if not quiet:
             print "Use default format: dat"
         type = "dat"
 
@@ -156,7 +156,7 @@ def read(path, type=None, quit=False):
             with open(path, mode="r") as fp:
                 data = piclke.load(fp)
 
-        if not quit:
+        if not quiet:
             filesize = conv.convertBytes(os.path.getsize(path))
             print "Read successfully: %s(%s)!" % (path, filesize)
         return data
@@ -165,7 +165,7 @@ def read(path, type=None, quit=False):
         return None
 
 
-def save(data, path, type=None, quit=False):
+def save(data, path, type=None, quiet=False):
     """
     Save muti-types of files
         Input: path, type=["csv", "txt", "dat", "json", "pck"]
@@ -186,7 +186,7 @@ def save(data, path, type=None, quit=False):
     if type == "pck":
         with open(path, mode="w") as fp:
             pickle.dump(data, fp)
-    if not quit:
+    if not quiet:
         filesize = conv.convertBytes(os.path.getsize(path))
         print "Save successfully: %s(%s)!" % (path, filesize)
 

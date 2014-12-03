@@ -74,6 +74,18 @@ def list2Matrix(lst, m, n):
     pass
 
 
+
+def list2Dict(lst, dft):
+    d = {}
+    for item in lst:
+        item = str(item).strip()
+        if item not in d:
+            d[item] = dft
+        d[item] += dft
+    return d
+
+
+
 def group(n, sep=','):
     s = str(abs(n))[::-1]
     groups = []

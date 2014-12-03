@@ -2,24 +2,22 @@
 # -*- coding: utf-8 -*-
 
 """
-API Module provides several external API-wrappers
-    - getLocationByIP
-
-Required Library
-    - comlib.net
-    - simplejson
-
-TODO:
-    -
-
-
-
+    API Module provides several external API-wrappers
+        - getLocationByIP
 """
 
-import random
-
 import net
-import date
+
+
+def getLocationByIP(IP):
+    """
+        get location information based on IP. Using Taobao API
+    """
+    url = "http://ip.taobao.com/service/getIpInfo.php?ip=%s" % (IP)
+    print url
+    respose = net.getHTMLContent(url)
+    return respose
+
 
 try:
     import simplejson as json
@@ -48,15 +46,11 @@ class IPLocation():
 
     def getGeoInfo(self):
         """
-        Get geo information from apis, return a dict about the location
-            Input: IP address
-            Output: geo info based on ip-services
+            get geo information from apis, return a dict about the location
+                Input: IP address
+                Output: geo info based on ip-services
         """
-        urls = [self.freegeoip_url, self.taobao_url, self.qq_url]
-        random.seed(date.getNow())
-        random.shuffle(urls)
-
-        for url in urls:
+        for url in [self.freegeoip_url, self.taobao_url, self.qq_url]:
             respose = net.getHTMLContent(url)
             if respose:
                 resposedict = json.loads(respose, encoding="utf-8")
@@ -68,9 +62,9 @@ class IPLocation():
 
     def getCountry(self):
         """
-        Return country information
-            Input: response info
-            Output: country info
+            Return country information
+                Input: response info
+                Output: country info
         """
         for respose in self.results:
             if "country_name" in respose:
@@ -82,9 +76,9 @@ class IPLocation():
 
     def getRegion(self):
         """
-        Return region information
-            Input: response info
-            Output: region info
+            Return region information
+                Input: response info
+                Output: region info
         """
         for respose in self.results:
             if "region" in respose:
@@ -94,9 +88,9 @@ class IPLocation():
 
     def getCity(self):
         """
-        Return city information
-            Input: response info
-            Output: city info
+            Return city information
+                Input: response info
+                Output: city info
         """
 
         for respose in self.results:

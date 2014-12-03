@@ -20,9 +20,6 @@ TODO:
 """
 
 
-
-
-
 import sys
 import time
 import datetime
@@ -52,7 +49,7 @@ class DB:
         type = self.config["type"]
         user = self.config["user"]
         passwd = self.config["passwd"]
-        quiet = self.config.get("quiet","False")
+        quiet = self.config.get("quiet", "False")
 
         failure = 1
         while 1:
@@ -222,7 +219,8 @@ class DB:
     def close(self):
         self.cursor.close()
         self.conn.close()
-        if self.config["quiet"] == "True":
+        quiet = self.config.get("quiet", "False")
+        if quiet == "True":
             pass
         else:
             print "Close connection to %s(%s)." % (self.config["host"], self.config["db"])

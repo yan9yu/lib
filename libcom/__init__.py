@@ -10,7 +10,7 @@ import api
 import cache
 import conv
 import date
-import decorator
+import deco
 import file
 import hash
 import net
@@ -20,4 +20,3 @@ import reg
 import sort
 import sql
 import thread
-import util
