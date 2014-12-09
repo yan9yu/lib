@@ -42,8 +42,8 @@ def getDateList(start, end=None):
         delta = (end_date_time - start_date_time).days
         # dateList = []
         # for ii in xrange(0, delta + 1):
-        #    next = timedelta(days=ii)
-        #    dateList.append((start_date_time + next).strftime("%Y%m%d"))
+        # next = timedelta(days=ii)
+        # dateList.append((start_date_time + next).strftime("%Y%m%d"))
         # return dateList[:-1]
         return [(start_date_time + timedelta(days=ii)).strftime("%Y%m%d") for ii in xrange(0, delta + 1)][:-1]
 
@@ -163,6 +163,14 @@ def getNowDatetime():
         Output: eg. datetime.datetime(2014, 9, 24, 15, 2, 57, 45000)
     """
     return datetime.now()
+
+
+def getDateFromDatetime(dat):
+    return dat.strftime("%Y%m%d")
+
+
+def getDetailedDateFromDatetime(dat):
+    return dat.strftime("%Y%m%d %H:%M:%S")
 
 
 def getDayDelta(start, end=None):
