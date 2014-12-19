@@ -129,6 +129,23 @@ def getToday():
     return time.strftime("%Y%m%d", time.localtime(time.time()))
 
 
+def getYesterday():
+    """
+    Return Yesterday in string
+        Input:
+        Output: eg, '20131231'
+    """
+    return getBeforeXDay(1, getToday())
+
+def getTomorrow():
+    """
+    Return Tomorrow in string
+        Input:
+        OUtput: eg, '20140102'
+    """
+    return getAfterXDay(1, getToday())
+
+
 def getNow():
     """
     Return Now in string
