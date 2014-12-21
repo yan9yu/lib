@@ -16,6 +16,7 @@ TODO:
 
 """
 
+
 def getSortedDictBykey(d, increasing=False):
     """
     Sort a dict in decreasing order.
@@ -31,7 +32,7 @@ def getSortedDictBykey(d, increasing=False):
     return d
 
 
-def getSortedDictByValue(d, increasing=False):
+def getSortedDictByValue(d, increasing=False, top=None):
     """
     Sort a dict in decreasing order.
     @note: this function might have sideeffects
@@ -41,7 +42,13 @@ def getSortedDictByValue(d, increasing=False):
     d.sort()
     if not increasing:
         d.reverse()
-    return d
+    if top is None:
+        return d
+    else:
+        dd = {}
+        for item in d[:top]:
+            dd[item[1]] = item[0]
+        return dd
 
 
 def getThresholdDict(dict, min):
@@ -82,6 +89,7 @@ def getCommonElement(lst, n=1):
     """
 
     from collections import Counter
+
     if isinstance(lst, list):
         return Counter(lst).most_common(n)
     else:
@@ -111,4 +119,5 @@ def getShuffledList(lst):
         Return a shuffled list
     """
     import random
+
     return random.shuffle(lst)
