@@ -190,7 +190,7 @@ def getDetailedDateFromDatetime(dat):
     return dat.strftime("%Y%m%d %H:%M:%S")
 
 
-def getDayDelta(start, end=None):
+def getDateDelta(start, end=None):
     """
     Return time delta between start~end. 
         Input: start = '20140101', end = '20140112'
