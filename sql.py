@@ -19,6 +19,7 @@ TODO:
 
 """
 
+
 import sys
 import time
 import datetime
@@ -29,6 +30,7 @@ sys.setdefaultencoding("utf-8")
 
 
 class DB:
+
     def __init__(self, config):
         self.config = config
         self.conn = None
@@ -59,7 +61,6 @@ class DB:
                     if type == "MySQL":
                         try:
                             import MySQLdb
-
                             self.conn = MySQLdb.connect(
                                 host=host, db=db, port=3306, user=user, passwd=passwd, use_unicode=False)
                             self.cursor = self.conn.cursor()
@@ -77,7 +78,6 @@ class DB:
                     if type == "MSSQL":
                         try:
                             import pymssql
-
                             self.conn = pymssql.connect(
                                 host=host, database=db, port=1433, user=user, password=passwd, charset="utf8")
                             self.cursor = self.conn.cursor()
@@ -127,8 +127,8 @@ class DB:
         # length = len(data)
         # count = 0
         # for ii in xrange(0, length):
-        # param += (tuple(data[ii].split()),)
-        # if (ii + 1) % 1000 == 0 or (ii + 1) == length:
+        #     param += (tuple(data[ii].split()),)
+        #     if (ii + 1) % 1000 == 0 or (ii + 1) == length:
         #         count += self.cursor.executemany(query, param)
         # self.conn.commit()
         # return count
@@ -139,7 +139,7 @@ class DB:
         finally:
             self.conn.commit()
 
-    def insertDict(self, data):
+    def insertDict(self, data, table):
         # 拼接 insert 语句
         keys = []
         values = []
@@ -166,7 +166,7 @@ class DB:
         keys = ",".join(keys)
         values = ",".join(values)
         conditions = ",".join(conditions)
-        comm = "insert into %s(%s) values(%s) on duplicate key update %s" % (data["table"], keys, values, conditions)
+        comm = "insert into %s(%s) values(%s) on duplicate key update %s" % (table, keys, values, conditions)
 
         # 尝试插入数据
         try:
