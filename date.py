@@ -137,6 +137,7 @@ def getYesterday():
     """
     return getBeforeXDay(1, getToday())
 
+
 def getTomorrow():
     """
     Return Tomorrow in string
@@ -162,6 +163,15 @@ def getMonth():
         Output: eg. '201401'
     """
     return getToday()[:-2]
+
+
+def getMonthByDate(dat):
+    """
+    Return Month in string by date
+        Input:
+        Output:
+    """
+    return dat[:-2]
 
 
 def getNowString():
