@@ -123,7 +123,7 @@ def eptDir(path):
         Input: path
         Output: file list
     """
-    files = fileList(path)
+    files = getFileList(path)
     for file in files:
         print "\t\tdeleting " + file
         if isDir(file):
@@ -154,7 +154,7 @@ def read(path, type=None, quiet=False):
                 data = fp.readlines()
         if type == "pck":
             with open(path, mode="r") as fp:
-                data = piclke.load(fp)
+                data = pickle.load(fp)
 
         if not quiet:
             filesize = conv.convertBytes(os.path.getsize(path))
@@ -163,6 +163,19 @@ def read(path, type=None, quiet=False):
     else:
         out_str = "ERROR: %s not exist!" % (path)
         return None
+
+
+def readByYield(path):
+    """
+    Read dat/csv/txt files using generator yield
+        Input: path, type=["csv", "txt", "dat"]
+        Output: data
+    """
+    with open(path, mode="r") as fp:
+        line = fp.readline()
+        while line:
+            yield line
+            line = fp.readline()
 
 
 def save(data, path, type=None, quiet=False):
