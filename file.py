@@ -223,6 +223,18 @@ def flush(data, file):
         print e.message
 
 
+def getFileSize(path):
+    """
+    Get file size in int
+        Input: path
+        Output: file size in int
+    """
+    if isExist(path):
+        return int(os.path.getsize(path))
+    else:
+        return -1
+
+
 def getFileStatus(path):
     """
     Get file MD5 code and save to *.status file
