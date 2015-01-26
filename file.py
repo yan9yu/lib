@@ -125,11 +125,12 @@ def eptDir(path):
     """
     files = getFileList(path)
     for file in files:
-        print "\t\tdeleting " + file
-        if isDir(file):
-            rmDir(file)
+        filePath, filename = file
+        print "Now deleting:\t%s " % (filePath)
+        if isDir(filePath):
+            eptDir(filePath)
         else:
-            rm(file)
+            rm(filePath)
 
 
 def read(path, type=None, quiet=False):
