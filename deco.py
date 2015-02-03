@@ -19,12 +19,15 @@ TODO:
 
 """
 
-
-
-
 import sys
 import time
 import functools
+import logging
+
+try:
+    from line_profiler import LineProfiler
+except Exception, e:
+    print "[ERROR] line_profiler: %s" % (e.message)
 
 
 def timeUsage(func):
@@ -111,6 +114,20 @@ def funcCompleted(funcName):
         return __funcCompleted
 
     return _funcCompleted
+
+
+def exeTime(func):
+    """
+    Completed decorator. print func complete message + time usage message
+    """
+
+    def newFunc(*args, **args2):
+        start = time.time()
+        back = func(*args, **args2)
+        print "[Time Usage] %s: %.2fms" % (func.__name__, (time.time() - start) * 1000)
+        return back
+
+    return newFunc
 
 
 def progressBar(func):
