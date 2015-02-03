@@ -10,29 +10,26 @@ Date Module provide date-relevant functions
 Required Library
     - time
     - datetime
-
-TODO:
-    -
-
-
-
 """
 
 import time
-
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def getDateList(start, end=None):
-    """
-    Return a date list between start~end. If end is None, then end will be start+1
+    """ Return a date list between start~end. If end is None, then end will be start+1
+    :param start: start date
+    :param end: end date
+    :return: date list between start and end. (NOT include end date)
+
+    e.g.
         Input: start = '20140101', end = '20140105'
         Output: ['20140101','20140102','20140103','20140104']
+
     """
 
     start_date_time = datetime.strptime(start, "%Y%m%d")
-    if end == None:
+    if end is None:
         oneday = timedelta(days=1)
         end_date_time = start_date_time + oneday
         end = end_date_time.strftime("%Y%m%d")
@@ -40,29 +37,35 @@ def getDateList(start, end=None):
     else:
         end_date_time = datetime.strptime(end, "%Y%m%d")
         delta = (end_date_time - start_date_time).days
-        # dateList = []
-        # for ii in xrange(0, delta + 1):
-        # next = timedelta(days=ii)
-        # dateList.append((start_date_time + next).strftime("%Y%m%d"))
-        # return dateList[:-1]
         return [(start_date_time + timedelta(days=ii)).strftime("%Y%m%d") for ii in xrange(0, delta + 1)][:-1]
 
 
 def getWeekList(start, end=None):
-    """
-    Return a week list between start~end. If end is None, then end will be the next week of start
+    """ Return a week list between start~end. If end is None, then end will be the next week of start.
+
+    :param start: start date
+    :param end: end date
+    :return: week date list
+
+    e.g.
         Input: start = '20140101', end = '20140108'
         Output: ['20140101','20140102','20140103','20140104','20140105','20140106','20140107']
     """
+
     delta = 7
-    if end is None or abs(getDayDelta(start, end)) > delta:
+    if end is None or abs(getDateDelta(start, end)) > delta:
         end = getAfterXDay(delta, start)
     return getDateList(start, end)
 
 
 def getMonthList(start, end=None):
-    """
-    Return a month list between start~end. If end is None, then end will be the next month of start
+    """ Return a month list between start~end. If end is None, then end will be the next month of start
+
+    :param start: start date
+    :param end: end date
+    :return: date list
+
+    e.g.
         Input: start = '20140101', end = '20140501'
         Output: ['201401','201402','201403','201404','201405']
     """
@@ -80,10 +83,14 @@ def getMonthList(start, end=None):
 
 
 def getDateListByMonth(year_month):
-    """
-    Return a date list in a month.
+    """ Return a date list in a month.
+
+    :param year_month:
+    :return: date list within a month
+
+    e.g.
         Input: year_month is '201401'
-        Output: 
+        Output:
                 ['20140101', '20140102', '20140103', '20140104', '20140105', '20140106', '20140107',
                 '20140108', '20140109', '20140110', '20140111', '20140112', '20140113', '20140114', '20140115', '20140116', '20140117',
                 '20140118', '20140119', '20140120', '20140121', '20140122', '20140123', '20140124', '20140125', '20140126', '20140127',
