@@ -186,7 +186,7 @@ def getHTMLContentSimple(url):
     """
     html = ""
     response = requests.get(url)
-    if response.stats_code == 200:
+    if response.status_code == 200:
         html = response.content
 
     return html
