@@ -46,10 +46,11 @@ class DB:
 
         host = self.config["host"]
         db = self.config["db"]
+        port = self.config["port"]
         type = self.config["type"]
         user = self.config["user"]
         passwd = self.config["passwd"]
-        quiet = self.config.get("quiet", "False")
+        quiet = self.config.get("quiet", False)
 
         failure = 1
         while 1:
@@ -62,10 +63,10 @@ class DB:
                         try:
                             import MySQLdb
                             self.conn = MySQLdb.connect(
-                                host=host, db=db, port=3306, user=user, passwd=passwd, use_unicode=False)
+                                host=host, db=db, port=port, user=user, passwd=passwd, use_unicode=False, charset="utf8")
                             self.cursor = self.conn.cursor()
                             self.cursor.execute("set names utf8")
-                            if quiet == "True":
+                            if quiet:
                                 pass
                             else:
                                 print "Connect to %s(MySQL: %s) successfully!" % (host, db)
@@ -81,7 +82,7 @@ class DB:
                             self.conn = pymssql.connect(
                                 host=host, database=db, port=1433, user=user, password=passwd, charset="utf8")
                             self.cursor = self.conn.cursor()
-                            if quiet == "True":
+                            if quiet :
                                 pass
                             else:
                                 print "Connect to %s(MSSQL: %s) successfully!" % (host, db)
