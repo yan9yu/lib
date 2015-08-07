@@ -221,7 +221,7 @@ class DB:
         self.cursor.close()
         self.conn.close()
         quiet = self.config.get("quiet", "False")
-        if quiet == "True":
+        if quiet == True:
             pass
         else:
             print "Close connection to %s(%s)." % (self.config["host"], self.config["db"])
