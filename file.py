@@ -196,7 +196,7 @@ def save(data, path, type=None, quiet=False):
             fp.flush()
     if type == "json":
         with open(path, mode="w") as fp:
-            json.dump(data, fp, indent=3, encoding="utf-8")
+            json.dump(data, fp, indent=3, encoding="utf-8", ensure_ascii=False)
     if type == "pck":
         with open(path, mode="w") as fp:
             pickle.dump(data, fp)
