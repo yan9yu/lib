@@ -160,7 +160,7 @@ def getNow():
         Input: 
         Output: eg. '20140101 00:00:00'
     """
-    return time.strftime("%Y%m%d %H:%M:%S", time.localtime(time.time()))
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 
 
 def getMonth():
@@ -207,7 +207,7 @@ def getDetailedDateFromDatetime(dat):
     return dat.strftime("%Y%m%d %H:%M:%S")
 
 
-def getDateDelta(start, end=None):
+def getDayDelta(start, end=None):
     """
     Return time delta between start~end. 
         Input: start = '20140101', end = '20140112'
@@ -221,6 +221,55 @@ def getDateDelta(start, end=None):
         end = datetime.strptime(end, "%Y%m%d")
         delta = end - start
         return delta.days
+
+
+def getHourDelta(start, end=None):
+    """
+    Return time delta between start~end.
+        Input: start = '20140101', end = '20140112'
+        Output: delta = 11
+    """
+
+    if end is None:
+        return 0
+    else:
+        start = datetime.strptime(start, "%Y%m%d")
+        end = datetime.strptime(end, "%Y%m%d")
+        delta = end - start
+        return delta.hour
+
+
+def getMinuteDelta(start, end=None):
+    """
+    Return time delta between start~end.
+        Input: start = '20140101', end = '20140112'
+        Output: delta = 11
+    """
+
+    if end is None:
+        return 0
+    else:
+        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+        delta = end - start
+
+        return round(int(delta.seconds / 60))
+
+
+def getFullDatetime(dat):
+    """
+    Return all hours in a day
+        Input: dat = '20140101'
+        Output: ['2014-01-01 00:00:00', '2014-01-01 01:00:00', '2014-01-01 02:00:00', ..., '2014-01-01 23:00:00', '2014-01-02 00:00:00']
+    """
+    hours = []
+    for hour in xrange(0, 25):
+        dd = datetime.strptime(dat, "%Y%m%d")
+        delta = timedelta(hours=hour)
+        dd = (dd + delta).strftime("%Y-%m-%d %H:%M:%S")
+        hours.append(dd)
+
+    return hours
 
 
 def getBeforeXDay(delta, start=None):

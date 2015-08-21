@@ -124,7 +124,15 @@ def exeTime(func):
     def newFunc(*args, **args2):
         start = time.time()
         back = func(*args, **args2)
-        print "[Time Usage] %s: %.2fms" % (func.__name__, (time.time() - start) * 1000)
+        ss = int(str((time.time() - start)).split(".")[0])
+        print time.time() - start, ss, ss
+        # 时间长度太长则显示分钟秒, 否则显示毫秒
+        if ss > 60:
+            print "[Time Usage] %s: %.2fm" % (func.__name__, (time.time() - start) / 60)
+        if 0 < ss <= 60:
+            print "[Time Usage] %s: %.2fs" % (func.__name__, (time.time() - start))
+        if ss <= 0:
+            print "[Time Usage] %s: %.2fms" % (func.__name__, (time.time() - start) * 1000)
         return back
 
     return newFunc
