@@ -125,7 +125,6 @@ def exeTime(func):
         start = time.time()
         back = func(*args, **args2)
         ss = int(str((time.time() - start)).split(".")[0])
-        print time.time() - start, ss, ss
         # 时间长度太长则显示分钟秒, 否则显示毫秒
         if ss > 60:
             print "[Time Usage] %s: %.2fm" % (func.__name__, (time.time() - start) / 60)
