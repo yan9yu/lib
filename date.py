@@ -42,6 +42,7 @@ def _convert(string, delimiter="-", with_hour=False):
         20150101 -> 2015-01-01 00:00:00
         20150101000000 -> 2015-01-01 00:00:00
     """
+
     new_string = ""
     if with_hour:
         if len(string) is 6:
