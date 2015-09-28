@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Date Module provide date-relevant functions
-    - getDateList(start, end=None)
-    - getWeekList(start, end=None)
-    - getMonthList(start, end=None)
 
 
 Required Library
@@ -13,258 +10,84 @@ Required Library
 """
 
 import time
-from datetime import datetime, timedelta
+import calendar
+from datetime import datetime
+from datetime import timedelta
+
+day_format = "%Y-%m-%d"
+day_format_full = "%Y-%m-%d %H:%M:%S"
 
 
-def getDateList(start, end=None):
-    """ Return a date list between start~end. If end is None, then end will be start+1
-    :param start: start date
-    :param end: end date
-    :return: date list between start and end. (NOT include end date)
-
-    e.g.
-        Input: start = '20140101', end = '20140105'
-        Output: ['20140101','20140102','20140103','20140104']
-
-    """
-
-    start_date_time = datetime.strptime(start, "%Y%m%d")
-    if end is None:
-        oneday = timedelta(days=1)
-        end_date_time = start_date_time + oneday
-        end = end_date_time.strftime("%Y%m%d")
-        return start, end
-    else:
-        end_date_time = datetime.strptime(end, "%Y%m%d")
-        delta = (end_date_time - start_date_time).days
-        return [(start_date_time + timedelta(days=ii)).strftime("%Y%m%d") for ii in xrange(0, delta + 1)][:-1]
+def now():
+    return time.strftime(day_format_full, time.localtime(time.time()))
 
 
-def getWeekList(start, end=None):
-    """ Return a week list between start~end. If end is None, then end will be the next week of start.
+def today():
+    return time.strftime(day_format, time.localtime(time.time()))
 
-    :param start: start date
-    :param end: end date
-    :return: week date list
+
+def tomorrow():
+    return after_xday(today(), 1)
+
+
+def yesterday():
+    return before_xday(today(), 1)
+
+
+def _convert(string, delimiter="-", with_hour=False):
+    """ Convert partial date string to full date string
 
     e.g.
-        Input: start = '20140101', end = '20140108'
-        Output: ['20140101','20140102','20140103','20140104','20140105','20140106','20140107']
+        150101   -> 2015-01-01 00:00:00
+        20150101 -> 2015-01-01 00:00:00
+        20150101000000 -> 2015-01-01 00:00:00
     """
-
-    delta = 7
-    if end is None or abs(getDateDelta(start, end)) > delta:
-        end = getAfterXDay(delta, start)
-    return getDateList(start, end)
-
-
-def getMonthList(start, end=None):
-    """ Return a month list between start~end. If end is None, then end will be the next month of start
-
-    :param start: start date
-    :param end: end date
-    :return: date list
-
-    e.g.
-        Input: start = '20140101', end = '20140501'
-        Output: ['201401','201402','201403','201404','201405']
-    """
-
-    if len(start) == 6:
-        start += "20"
-    if end == None:
-        next_month_first_day = getNextMonthFirstDay(start)
-        return start[:-2], next_month_first_day[:-2]
+    new_string = ""
+    if with_hour:
+        if len(string) is 6:
+            string = "20" + string
+        if len(string) is 8:
+            new_string = "%s%s%s%s%s 00:00:00" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+        if len(string) is 10:
+            new_string = "%s%s%s%s%s 00:00:00" % (string[0:4], delimiter, string[5:7], delimiter, string[8:10])
+        if len(string) is 12:
+            string = "20" + string
+        if len(string) is 14:
+            new_string = "%s%s%s%s%s %s:%s:%s" % (
+                string[0:4], delimiter, string[4:6], delimiter, string[6:8], string[8:10], string[10:12], string[12:14])
     else:
-        if len(end) == 6:
-            end += "20"
-        dates = getDateList(start, end)
-        return sorted(list(set([item[:-2] for item in dates])))
+        if len(string) is 6:
+            string = "20" + string
+        if len(string) is 8:
+            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+        if len(string) is 10:
+            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[5:7], delimiter, string[8:10])
+        if len(string) is 14:
+            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+    return new_string
 
 
-def getDateListByMonth(year_month):
-    """ Return a date list in a month.
-
-    :param year_month:
-    :return: date list within a month
-
-    e.g.
-        Input: year_month is '201401'
-        Output:
-                ['20140101', '20140102', '20140103', '20140104', '20140105', '20140106', '20140107',
-                '20140108', '20140109', '20140110', '20140111', '20140112', '20140113', '20140114', '20140115', '20140116', '20140117',
-                '20140118', '20140119', '20140120', '20140121', '20140122', '20140123', '20140124', '20140125', '20140126', '20140127',
-                '20140128', '20140129', '20140130', '20140131']
-    """
-
-    if len(year_month) == 6:
-        year = year_month[:4]
-        month = year_month[4:]
-    elif len(year_month) == 4:
-        year = "20" + year_month[:2]
-        month = year_month[2:]
-    first_day = year + month + "01"
-    next_month_first_day = getNextMonthFirstDay(first_day)
-    dates = getDateList(first_day, next_month_first_day)
-    return dates
-
-
-def getNextMonthFirstDay(datenow):
-    """
-    Return the first day of the next month
-        Input: datenow = '20140101'
-        Output: '20140201'
-    """
-    year = int(datenow[:4])
-    month = int(datenow[4:6])
-
-    next_year = year
-    next_month = month + 1
-    if month == 12:
-        next_year = year + 1
-        next_month = 1
-    next_month_date = datetime(next_year, next_month, 1)
-    return next_month_date.strftime("%Y%m%d")
-
-
-def getToday():
-    """
-    Return Today in string
-        Input: 
-        Output: eg, '20140101'
-    """
-    return time.strftime("%Y%m%d", time.localtime(time.time()))
-
-
-def getYesterday():
-    """
-    Return Yesterday in string
-        Input:
-        Output: eg, '20131231'
-    """
-    return getBeforeXDay(1, getToday())
-
-
-def getTomorrow():
-    """
-    Return Tomorrow in string
-        Input:
-        OUtput: eg, '20140102'
-    """
-    return getAfterXDay(1, getToday())
-
-
-def getNow():
-    """
-    Return Now in string
-        Input: 
-        Output: eg. '20140101 00:00:00'
-    """
-    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
-
-
-def getMonth():
-    """
-    Return Month in string
-        Input: 
-        Output: eg. '201401'
-    """
-    return getToday()[:-2]
-
-
-def getMonthByDate(dat):
-    """
-    Return Month in string by date
-        Input:
-        Output:
-    """
-    return dat[:-2]
-
-
-def getNowString():
-    """
-    Return Now in string
-        Input: 
-        Output: eg. '20140101 00:00:00'
-    """
-    return time.strftime("%Y%m%d", time.localtime(time.time()))
-
-
-def getNowDatetime():
-    """
-    Return Now in datetime
-        Input: 
-        Output: eg. datetime.datetime(2014, 9, 24, 15, 2, 57, 45000)
-    """
-    return datetime.now()
-
-
-def getDateFromDatetime(dat):
-    return dat.strftime("%Y%m%d")
-
-
-def getDetailedDateFromDatetime(dat):
-    return dat.strftime("%Y%m%d %H:%M:%S")
-
-
-def getDayDelta(start, end=None):
-    """
-    Return time delta between start~end. 
-        Input: start = '20140101', end = '20140112'
-        Output: delta = 11
-    """
-
-    if end is None:
-        return 0
+def convert_to_datetime(string, with_hour=False):
+    string = _convert(string, with_hour=with_hour)
+    if with_hour:
+        formats = day_format_full
     else:
-        start = datetime.strptime(start, "%Y%m%d")
-        end = datetime.strptime(end, "%Y%m%d")
-        delta = end - start
-        return delta.days
+        formats = day_format
+    return datetime.strptime(string, formats)
 
 
-def getHourDelta(start, end=None):
-    """
-    Return time delta between start~end.
-        Input: start = '20140101', end = '20140112'
-        Output: delta = 11
-    """
-
-    if end is None:
-        return 0
+def convert_to_string(dt, with_hour=False):
+    if with_hour:
+        formats = day_format_full
     else:
-        start = datetime.strptime(start, "%Y%m%d")
-        end = datetime.strptime(end, "%Y%m%d")
-        delta = end - start
-        return delta.hour
+        formats = day_format
+    return dt.strftime(formats)
 
 
-def getMinuteDelta(start, end=None):
-    """
-    Return time delta between start~end.
-        Input: start = '20140101', end = '20140112'
-        Output: delta = 11
-    """
-
-    if end is None:
-        return 0
-    else:
-        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
-        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
-        delta = end - start
-
-        return round(int(delta.seconds / 60))
-
-
-def getFullDatetime(dat):
-    """
-    Return all hours in a day
-        Input: dat = '20140101'
-        Output: ['2014-01-01 00:00:00', '2014-01-01 01:00:00', '2014-01-01 02:00:00', ..., '2014-01-01 23:00:00', '2014-01-02 00:00:00']
-    """
+def hour_list(date):
     hours = []
     for hour in xrange(0, 25):
-        dd = datetime.strptime(dat, "%Y%m%d")
+        dd = convert_to_datetime(date, with_hour=True)
         delta = timedelta(hours=hour)
         dd = (dd + delta).strftime("%Y-%m-%d %H:%M:%S")
         hours.append(dd)
@@ -272,31 +95,91 @@ def getFullDatetime(dat):
     return hours
 
 
-def getBeforeXDay(delta, start=None):
-    """
-    Return X day before Today in string
-        Input: delta = 1, start = '20140102'
-        Output: '20140101'
-    """
+def day_list(start, end=None):
+    """ Return a day list between start and end. If end is None, end will be start+1
 
-    if start is None:
-        today = datetime.strptime(getToday(), "%Y%m%d")
+
+    """
+    start = _convert(start, with_hour=False)
+    start_datetime = convert_to_datetime(start)
+    if end is None:
+        one = timedelta(days=1)
+        end = convert_to_string(start_datetime + one)
+        return start, end
+
     else:
-        today = datetime.strptime(start, "%Y%m%d")
-    x = timedelta(days=delta)
-    return (today - x).strftime("%Y%m%d")
+        end = _convert(end, with_hour=False)
+        end_datetime = convert_to_datetime(end)
+        delta = (end_datetime - start_datetime).days
+        return [convert_to_string(start_datetime + timedelta(days=ii)) for ii in xrange(0, delta + 1)]
 
 
-def getAfterXDay(delta, start=None):
+def day_pair_list(start, end=None):
+    """ Return a day list with paired date. If end is None, end will be start+1
+
     """
-    Return X day after Today in  string
-        Input: delta = 1, start = '20140101'
-        Output: '20140102'
+    days = day_list(start, end)
+    pairs = []
+    for ii in xrange(0, len(days) - 1):
+        first = days[ii]
+        second = days[ii + 1]
+        pairs.append((first, second))
+
+    return pairs
+
+
+def week_list(start, end=None):
     """
 
-    if start is None:
-        today = datetime.strptime(getToday(), "%Y%m%d")
+    """
+    delta = 6
+    if end is None or abs(day_delta(start, end)) > delta:
+        end = after_xday(start, delta)
+
+    return day_list(start, end)
+
+
+def day_delta(start, end=None):
+    """ Return day delta between two date
+
+    """
+
+    if end is None:
+        return 0
     else:
-        today = datetime.strptime(start, "%Y%m%d")
+        start = convert_to_datetime(start)
+        end = convert_to_datetime(end)
+        delta = end - start
+        return delta.days
+
+
+def hour_delta(start, end=None):
+    """
+
+    """
+    if end is None:
+        return 0
+    else:
+        start = convert_to_datetime(start, with_hour=True)
+        end = convert_to_datetime(end, with_hour=True)
+        delta = end - start
+
+        return delta.days * 24 + delta.seconds // 3600
+
+
+def before_xday(start, delta):
+    """
+
+    """
+    start = convert_to_datetime(start)
     x = timedelta(days=delta)
-    return (today + x).strftime("%Y%m%d")
+    return convert_to_string(start - x)
+
+
+def after_xday(start, delta):
+    """
+
+    """
+    start = convert_to_datetime(start)
+    x = timedelta(days=delta)
+    return convert_to_string(start + x)
