@@ -19,23 +19,84 @@ day_format_full = "%Y-%m-%d %H:%M:%S"
 
 
 def now():
+    """ Return Now string with date and hour
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+    out: string
+        now string
+
+    """
     return time.strftime(day_format_full, time.localtime(time.time()))
 
 
 def today():
+    """ Return today string
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+    out: string
+        today string
+
+    """
     return time.strftime(day_format, time.localtime(time.time()))
 
 
 def tomorrow():
+    """ Return Tomorrow string
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+    out: string
+        tomorrow string
+
+
+    """
     return after_xday(today(), 1)
 
 
 def yesterday():
+    """ Return Yesterday string
+
+    Parameters
+    ----------
+
+
+    Returns
+    -------
+
+    out: string
+        yesterday string
+
+
+    """
     return before_xday(today(), 1)
 
 
 def _convert(string, delimiter="-", with_hour=False):
     """ Convert partial date string to full date string
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+
 
     e.g.
         150101   -> 2015-01-01 00:00:00
@@ -48,23 +109,22 @@ def _convert(string, delimiter="-", with_hour=False):
         if len(string) is 6:
             string = "20" + string
         if len(string) is 8:
-            new_string = "%s%s%s%s%s 00:00:00" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+            new_string = "%s-%s-%s 00:00:00" % (string[0:4], string[4:6], string[6:8])
         if len(string) is 10:
-            new_string = "%s%s%s%s%s 00:00:00" % (string[0:4], delimiter, string[5:7], delimiter, string[8:10])
+            new_string = "%s-%s-%s 00:00:00" % (string[0:4], string[5:7], string[8:10])
         if len(string) is 12:
             string = "20" + string
         if len(string) is 14:
-            new_string = "%s%s%s%s%s %s:%s:%s" % (
-                string[0:4], delimiter, string[4:6], delimiter, string[6:8], string[8:10], string[10:12], string[12:14])
+            new_string = "%s-%s-%s %s:%s:%s" % (string[0:4], string[4:6], string[6:8], string[8:10], string[10:12], string[12:14])
     else:
         if len(string) is 6:
             string = "20" + string
         if len(string) is 8:
-            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+            new_string = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
         if len(string) is 10:
-            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[5:7], delimiter, string[8:10])
+            new_string = "%s-%s-%s" % (string[0:4], string[5:7], string[8:10])
         if len(string) is 14:
-            new_string = "%s%s%s%s%s" % (string[0:4], delimiter, string[4:6], delimiter, string[6:8])
+            new_string = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
     return new_string
 
 
