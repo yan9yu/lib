@@ -88,47 +88,95 @@ def yesterday():
     return before_xday(today(), 1)
 
 
-def _convert(string, delimiter="-", with_hour=False):
+def _convert(string, with_hour=False):
     """ Convert partial date string to full date string
 
     Parameters
     ----------
+    string: String
+        partial date string
+
+    with_hour: Bool
+        full date or just date
+
 
     Returns
     -------
 
+    out: String
+        full date in string
 
-    e.g.
-        150101   -> 2015-01-01 00:00:00
-        20150101 -> 2015-01-01 00:00:00
-        20150101000000 -> 2015-01-01 00:00:00
+
+    Examples
+    --------
+
+    >> print _convert("150101", with_hour=False)
+    >> "2015-01-01"
+    >>
+    >> print _convert("20150101", with_hour=True)
+    >> "2015-01-01 00:00:00"
+    >>
+    >> print _convert("150101")
+    >> "2015-01-01 00:00:00"
+    >>
+    >> print _convert("20150101000000", with_hour=True)
+    >> "2015-01-01 00:00:00"
     """
 
-    new_string = ""
+    out = ""
     if with_hour:
         if len(string) is 6:
             string = "20" + string
         if len(string) is 8:
-            new_string = "%s-%s-%s 00:00:00" % (string[0:4], string[4:6], string[6:8])
+            out = "%s-%s-%s 00:00:00" % (string[0:4], string[4:6], string[6:8])
         if len(string) is 10:
-            new_string = "%s-%s-%s 00:00:00" % (string[0:4], string[5:7], string[8:10])
-        if len(string) is 12:
+            out = "%s-%s-%s 00:00:00" % (string[0:4], string[5:7], string[8:10])
+        if len(out) is 12:
             string = "20" + string
         if len(string) is 14:
-            new_string = "%s-%s-%s %s:%s:%s" % (string[0:4], string[4:6], string[6:8], string[8:10], string[10:12], string[12:14])
+            out = "%s-%s-%s %s:%s:%s" % (
+            string[0:4], string[4:6], string[6:8], string[8:10], string[10:12], string[12:14])
     else:
         if len(string) is 6:
             string = "20" + string
         if len(string) is 8:
-            new_string = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
+            out = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
         if len(string) is 10:
-            new_string = "%s-%s-%s" % (string[0:4], string[5:7], string[8:10])
+            out = "%s-%s-%s" % (string[0:4], string[5:7], string[8:10])
         if len(string) is 14:
-            new_string = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
-    return new_string
+            out = "%s-%s-%s" % (string[0:4], string[4:6], string[6:8])
+    return out
 
 
 def convert_to_datetime(string, with_hour=False):
+    """ Convert String to Datetime
+
+    Parameters
+    ----------
+
+    string: String
+        partial date string
+
+    Returns
+    -------
+
+    out: Datetime
+        partial datetime or full datetime
+
+
+    Examples
+    --------
+
+    >> print convert_to_datetime("150101")
+    >> "2015-01-01 00:00:00"
+    >>
+    >> print convert_to_datetime("20150101")
+    >> "2015-01-01 00:00:00"
+    >>
+    >> print convert_to_datetime("20150101010203")
+    >> "2015-01-01 01:02:03"
+
+    """
     string = _convert(string, with_hour=with_hour)
     if with_hour:
         formats = day_format_full
@@ -138,6 +186,20 @@ def convert_to_datetime(string, with_hour=False):
 
 
 def convert_to_string(dt, with_hour=False):
+    """ Convert Datetime to string
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+
+    Examples
+    --------
+
+
+
+    """
     if with_hour:
         formats = day_format_full
     else:
@@ -146,6 +208,9 @@ def convert_to_string(dt, with_hour=False):
 
 
 def hour_list(date):
+    """ Return hours of a day
+
+    """
     hours = []
     for hour in xrange(0, 25):
         dd = convert_to_datetime(date, with_hour=True)
@@ -190,7 +255,7 @@ def day_pair_list(start, end=None):
 
 
 def week_list(start, end=None):
-    """
+    """ Return a day list in a week
 
     """
     delta = 6
@@ -198,6 +263,20 @@ def week_list(start, end=None):
         end = after_xday(start, delta)
 
     return day_list(start, end)
+
+
+def hour_delta(start, end=None):
+    """ Return hour delta between two date
+
+    """
+    if end is None:
+        return 0
+    else:
+        start = convert_to_datetime(start, with_hour=True)
+        end = convert_to_datetime(end, with_hour=True)
+        delta = end - start
+
+        return delta.days * 24 + delta.seconds // 3600
 
 
 def day_delta(start, end=None):
@@ -214,33 +293,19 @@ def day_delta(start, end=None):
         return delta.days
 
 
-def hour_delta(start, end=None):
-    """
+def before_xday(dat, delta):
+    """ Return a date before x day of the given day
 
     """
-    if end is None:
-        return 0
-    else:
-        start = convert_to_datetime(start, with_hour=True)
-        end = convert_to_datetime(end, with_hour=True)
-        delta = end - start
-
-        return delta.days * 24 + delta.seconds // 3600
-
-
-def before_xday(start, delta):
-    """
-
-    """
-    start = convert_to_datetime(start)
+    dat = convert_to_datetime(dat)
     x = timedelta(days=delta)
-    return convert_to_string(start - x)
+    return convert_to_string(dat - x)
 
 
-def after_xday(start, delta):
+def after_xday(dat, delta):
+    """ Return a date after x day of the given day
+
     """
-
-    """
-    start = convert_to_datetime(start)
+    dat = convert_to_datetime(dat)
     x = timedelta(days=delta)
-    return convert_to_string(start + x)
+    return convert_to_string(dat + x)
